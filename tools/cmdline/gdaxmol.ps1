@@ -22,7 +22,7 @@ $axver_file = (Resolve-Path $GDAX_ROOT/core/axmolver.h.in).Path
 $content = $(Get-Content -Path $axver_file)
 
 function parse_axver($part) {
-    return ($content | Select-String "#define GDAX_VERSION_$part").Line.Split(' ')[2]
+    return ($content | Select-String "#define AX_VERSION_$part").Line.Split(' ')[2]
 }
 function realpath($path) {
     return $Global:ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($path)

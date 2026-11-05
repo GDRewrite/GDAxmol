@@ -89,7 +89,7 @@ else {
 }
 
 # 1k/1kiss.ps1
-$1k_script = Join-Path $AX_ROOT '1k/1kiss.ps1'
+$1k_script = Join-Path $GDAX_ROOT '1k/1kiss.ps1'
 if (!(Test-Path $1k_script -PathType Leaf)) {
     throw "The 1k/1kiss.ps1 not found"
 }
