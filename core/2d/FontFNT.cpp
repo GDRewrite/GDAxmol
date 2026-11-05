@@ -165,7 +165,7 @@ std::set<unsigned int>* BMFontConfiguration::parseConfigFile(std::string_view co
     std::set<unsigned int>* validCharsString = new std::set<unsigned int>();
 
     auto contentsLen = strlen(contents);
-    char line[512]   = {0};
+    std::string line;
 
     auto next         = strchr(contents, '\n');
     auto base         = contents;
@@ -173,8 +173,7 @@ std::set<unsigned int>* BMFontConfiguration::parseConfigFile(std::string_view co
     while (next)
     {
         size_t lineLength = ((int)(next - base));
-        memcpy(line, contents + parseCount, lineLength);
-        line[lineLength] = 0;
+        line.assign(contents + parseCount, lineLength);
 
         parseCount += lineLength + 1;
         if (parseCount < contentsLen)
@@ -187,35 +186,35 @@ std::set<unsigned int>* BMFontConfiguration::parseConfigFile(std::string_view co
             next = nullptr;
         }
 
-        if (memcmp(line, "info face", 9) == 0)
+        if (line.rfind("info face", 0) == 0)
         {
             // FIXME: info parsing is incomplete
             // Not needed for the Hiero editors, but needed for the AngelCode editor
             //            [self parseInfoArguments:line];
-            this->parseInfoArguments(line);
+            this->parseInfoArguments(line.c_str());
         }
         // Check to see if the start of the line is something we are interested in
-        else if (memcmp(line, "common lineHeight", 17) == 0)
+        else if (line.rfind("common lineHeight", 0) == 0)
         {
-            this->parseCommonArguments(line);
+            this->parseCommonArguments(line.c_str());
         }
-        else if (memcmp(line, "page id", 7) == 0)
+        else if (line.rfind("page id", 0) == 0)
         {
-            this->parseImageFileName(line, controlFile);
+            this->parseImageFileName(line.c_str(), controlFile);
         }
-        else if (memcmp(line, "chars c", 7) == 0)
+        else if (line.rfind("chars c", 0) == 0)
         {
             // Ignore this line
         }
-        else if (memcmp(line, "char", 4) == 0)
+        else if (line.rfind("char", 0) == 0)
         {
             // Parse the current line and create a new CharDef
-            unsigned int charID = this->parseCharacterDefinition(line);
+            unsigned int charID = this->parseCharacterDefinition(line.c_str());
             validCharsString->insert(charID);
         }
-        else if (memcmp(line, "kerning first", 13) == 0)
+        else if (line.rfind("kerning first", 0) == 0)
         {
-            this->parseKerningEntry(line);
+            this->parseKerningEntry(line.c_str());
         }
     }
 
